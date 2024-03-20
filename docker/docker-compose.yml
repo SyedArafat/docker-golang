@@ -1,0 +1,29 @@
+version: '3.7'
+
+networks:
+  default:
+    driver: ${NETWORKS_DRIVER}
+
+services:
+  app:
+    image: docker_golang:${DOCKER_BUILD_MODE}
+    build:
+      context: ${DOCKER_BUILD_CONTEXT_DIR}
+      dockerfile: docker/app/Dockerfile
+      args:
+        - HTTP_PROXY=${APP_HTTP_PROXY}
+        - HTTPS_PROXY=${APP_HTTPS_PROXY}
+        - NO_PROXY=${APP_NO_PROXY}
+        - TZ=${TIMEZONE}
+        - GOS=${GOOS}
+        - GOARCH=${GOARCH}
+        - CGO_ENABLED=${CGO_ENABLED}
+#    restart: always
+    container_name:
+      docker_golang
+    env_file:
+      - ./.envs/app.env
+#    ports:
+#      - ${WEB_HTTP_PUBLISH_PORT}:80
+    networks:
+      default:
